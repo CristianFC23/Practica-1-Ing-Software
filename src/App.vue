@@ -31,27 +31,27 @@
 
       <ul class="nav-menu">
         <li class="nav-item">
-          <a href="#" @click="setActiveRoute('home')" :class="{ 'active': activeRoute === 'home' }" class="nav-link">
+          <a href="/" @click="setActiveRoute('home')" :class="{ 'active': activeRoute === 'home' }" class="nav-link">
             <span class="nav-icon">🏠</span>
             <span class="nav-text" v-show="sidebarOpen">Home</span>
           </a>
         </li>
         <li class="nav-item">
-          <a href="#" @click="setActiveRoute('ubicaciones')" :class="{ 'active': activeRoute === 'ubicaciones' }"
+          <a href="/ubicacion" @click="setActiveRoute('ubicaciones')" :class="{ 'active': activeRoute === 'ubicaciones' }"
             class="nav-link">
             <span class="nav-icon">📍</span>
             <span class="nav-text" v-show="sidebarOpen">Ubicaciones</span>
           </a>
         </li>
         <li class="nav-item">
-          <a href="#" @click="setActiveRoute('responsables')" :class="{ 'active': activeRoute === 'responsables' }"
+          <a href="personal" @click="setActiveRoute('responsables')" :class="{ 'active': activeRoute === 'responsables' }"
             class="nav-link">
             <span class="nav-icon">👥</span>
             <span class="nav-text" v-show="sidebarOpen">Responsables</span>
           </a>
         </li>
         <li class="nav-item">
-          <a href="#" @click="setActiveRoute('equipos')" :class="{ 'active': activeRoute === 'equipos' }"
+          <a href="equipos" @click="setActiveRoute('equipos')" :class="{ 'active': activeRoute === 'equipos' }"
             class="nav-link">
             <span class="nav-icon">🔧</span>
             <span class="nav-text" v-show="sidebarOpen">Equipos</span>
