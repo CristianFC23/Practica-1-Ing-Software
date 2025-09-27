@@ -1,8 +1,14 @@
 <template>
   <!-- Dashboard Cards -->
   <div class="dashboard-cards">
+    <!-- Estado de error global -->
+    <div v-if="error" class="error-banner">
+      <p>{{ error }}</p>
+      <button @click="refrescarDashboard" class="btn-refresh">Reintentar</button>
+    </div>
+
     <!-- Ubicaciones Card -->
-    <div class="card ubicaciones-card">
+    <div class="card ubicaciones-card" :class="{ 'loading': loading.ubicaciones }">
       <div class="card-header">
         <div class="card-icon ubicaciones-icon">
           <span>📍</span>
@@ -14,16 +20,16 @@
       </div>
       
       <div class="card-body">
-        <div class="card-number">{{ ubicaciones.total }}</div>
+        <div class="card-number">{{ ubicacionesTotal }}</div>
         <div class="card-label">Total</div>
       </div>
 
       <div class="card-actions">
-        <button class="btn btn-primary">
+        <button @click="nuevaUbicacion" class="btn btn-primary">
           <span class="btn-icon">+</span>
           Nueva Ubicación
         </button>
-        <button class="btn btn-secondary">
+        <button @click="irAUbicaciones" class="btn btn-secondary">
           <span class="btn-icon">📋</span>
           Ver Todas
         </button>
@@ -31,7 +37,7 @@
     </div>
 
     <!-- Responsables Card -->
-    <div class="card responsables-card">
+    <div class="card responsables-card" :class="{ 'loading': loading.responsables }">
       <div class="card-header">
         <div class="card-icon responsables-icon">
           <span>👥</span>
@@ -43,16 +49,16 @@
       </div>
       
       <div class="card-body">
-        <div class="card-number">{{ responsables.total }}</div>
+        <div class="card-number">{{ responsablesTotal }}</div>
         <div class="card-label">Total</div>
       </div>
 
       <div class="card-actions">
-        <button class="btn btn-primary">
+        <button @click="nuevoResponsable" class="btn btn-primary">
           <span class="btn-icon">+</span>
           Nuevo Responsable
         </button>
-        <button class="btn btn-secondary">
+        <button @click="irAResponsables" class="btn btn-secondary">
           <span class="btn-icon">📋</span>
           Ver Todos
         </button>
@@ -60,7 +66,7 @@
     </div>
 
     <!-- Equipos Médicos Card -->
-    <div class="card equipos-card">
+    <div class="card equipos-card" :class="{ 'loading': loading.equipos }">
       <div class="card-header">
         <div class="card-icon equipos-icon">
           <span>🏥</span>
@@ -72,23 +78,34 @@
       </div>
       
       <div class="card-body">
-        <div class="card-number">{{ equipos.total }}</div>
+        <div class="card-number">{{ equiposTotal }}</div>
         <div class="card-label">Total</div>
       </div>
 
       <div class="card-actions">
-        <button class="btn btn-primary">
+        <button @click="nuevoEquipo" class="btn btn-primary">
           <span class="btn-icon">+</span>
           Nuevo Equipo
         </button>
-        <button class="btn btn-secondary">
+        <button @click="irAEquipos" class="btn btn-secondary">
           <span class="btn-icon">📋</span>
           Ver Todos
         </button>
       </div>
     </div>
-  </div>
 
+    <!-- Botón para refrescar dashboard -->
+    <div class="refresh-section">
+      <button 
+        @click="refrescarDashboard" 
+        class="btn btn-refresh"
+        :disabled="todosCargando"
+      >
+        <span class="btn-icon">🔄</span>
+        {{ todosCargando ? 'Actualizando...' : 'Actualizar Dashboard' }}
+      </button>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -98,35 +115,234 @@ export default {
     return {
       sidebarOpen: true,
       activeRoute: 'home',
+      loading: {
+        ubicaciones: false,
+        responsables: false,
+        equipos: false
+      },
       ubicaciones: {
-        total: 15
+        total: 0
       },
       responsables: {
-        total: 28
+        total: 0
       },
       equipos: {
-        total: 142
-      }
+        total: 0
+      },
+      error: null
     }
+  },
+  created() {
+    // Cargar datos al crear el componente
+    this.cargarDashboard();
   },
   methods: {
     toggleSidebar() {
       this.sidebarOpen = !this.sidebarOpen;
     },
+    
     setActiveRoute(route) {
       this.activeRoute = route;
+    },
+
+    // Cargar todos los datos del dashboard
+    async cargarDashboard() {
+      try {
+        // Ejecutar todas las consultas en paralelo para mejor rendimiento
+        await Promise.all([
+          this.cargarUbicaciones(),
+          this.cargarResponsables(),
+          this.cargarEquipos()
+        ]);
+        console.log('Dashboard cargado exitosamente');
+      } catch (error) {
+        console.error('Error cargando dashboard:', error);
+        this.error = 'Error al cargar los datos del dashboard';
+      }
+    },
+
+    // Cargar cantidad de ubicaciones
+    async cargarUbicaciones() {
+      this.loading.ubicaciones = true;
+      try {
+        const respuesta = await fetch('http://localhost/pacientes/ubicaciones.php');
+        if (!respuesta.ok) {
+          throw new Error('Error en la respuesta del servidor');
+        }
+        const datos = await respuesta.json();
+        
+        if (Array.isArray(datos)) {
+          this.ubicaciones.total = datos.length;
+        } else {
+          this.ubicaciones.total = 0;
+        }
+        
+        console.log('Ubicaciones cargadas:', this.ubicaciones.total);
+      } catch (error) {
+        console.error('Error cargando ubicaciones:', error);
+        this.ubicaciones.total = 'Error';
+      } finally {
+        this.loading.ubicaciones = false;
+      }
+    },
+
+    // Cargar cantidad de responsables
+    async cargarResponsables() {
+      this.loading.responsables = true;
+      try {
+        const respuesta = await fetch('http://localhost/pacientes/responsables.php');
+        if (!respuesta.ok) {
+          throw new Error('Error en la respuesta del servidor');
+        }
+        const datos = await respuesta.json();
+        
+        if (Array.isArray(datos)) {
+          this.responsables.total = datos.length;
+        } else {
+          this.responsables.total = 0;
+        }
+        
+        console.log('Responsables cargados:', this.responsables.total);
+      } catch (error) {
+        console.error('Error cargando responsables:', error);
+        this.responsables.total = 'Error';
+      } finally {
+        this.loading.responsables = false;
+      }
+    },
+
+    // Cargar cantidad de equipos médicos
+    async cargarEquipos() {
+      this.loading.equipos = true;
+      try {
+        const respuesta = await fetch('http://localhost/pacientes/equipos_medicos.php');
+        if (!respuesta.ok) {
+          throw new Error('Error en la respuesta del servidor');
+        }
+        const datos = await respuesta.json();
+        
+        if (Array.isArray(datos)) {
+          this.equipos.total = datos.length;
+        } else {
+          this.equipos.total = 0;
+        }
+        
+        console.log('Equipos médicos cargados:', this.equipos.total);
+      } catch (error) {
+        console.error('Error cargando equipos médicos:', error);
+        this.equipos.total = 'Error';
+      } finally {
+        this.loading.equipos = false;
+      }
+    },
+
+    // Método para refrescar todos los datos
+    refrescarDashboard() {
+      this.error = null;
+      this.cargarDashboard();
+    },
+
+    // Métodos para navegar a cada sección (opcional)
+    irAUbicaciones() {
+      // Aquí puedes agregar la lógica para navegar a la página de ubicaciones
+      console.log('Navegando a ubicaciones...');
+      this.$router.push('/ubicacion');
+      // Ejemplo: this.$router.push('/ubicaciones');
+    },
+
+    irAResponsables() {
+      // Aquí puedes agregar la lógica para navegar a la página de responsables
+      console.log('Navegando a responsables...');
+      this.$router.push('/personal');
+      // Ejemplo: this.$router.push('/responsables');
+    },
+
+    irAEquipos() {
+      // Aquí puedes agregar la lógica para navegar a la página de equipos
+      console.log('Navegando a equipos médicos...');
+      this.$router.push('/equipos');
+      // Ejemplo: this.$router.push('/equipos');
+    },
+
+    // Métodos para crear nuevos registros (opcional)
+    nuevaUbicacion() {
+      console.log('Creando nueva ubicación...');
+      // Aquí puedes agregar la lógica para crear una nueva ubicación
+    },
+
+    nuevoResponsable() {
+      console.log('Creando nuevo responsable...');
+      // Aquí puedes agregar la lógica para crear un nuevo responsable
+    },
+
+    nuevoEquipo() {
+      console.log('Creando nuevo equipo médico...');
+      // Aquí puedes agregar la lógica para crear un nuevo equipo
+    }
+  },
+
+  // Computed properties para mostrar estados de carga
+  computed: {
+    todosCargando() {
+      return this.loading.ubicaciones || this.loading.responsables || this.loading.equipos;
+    },
+
+    // Formatear números para mostrar
+    ubicacionesTotal() {
+      if (this.loading.ubicaciones) return '...';
+      if (this.ubicaciones.total === 'Error') return '⚠️';
+      return this.ubicaciones.total;
+    },
+
+    responsablesTotal() {
+      if (this.loading.responsables) return '...';
+      if (this.responsables.total === 'Error') return '⚠️';
+      return this.responsables.total;
+    },
+
+    equiposTotal() {
+      if (this.loading.equipos) return '...';
+      if (this.equipos.total === 'Error') return '⚠️';
+      return this.equipos.total;
     }
   }
-}
+};
 </script>
 
+
 <style scoped>
-  /* Dashboard Cards */
+/* Dashboard Cards */
 .dashboard-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 30px;
   max-width: 1200px;
+}
+
+/* Error banner */
+.error-banner {
+  grid-column: 1 / -1;
+  background: #fee;
+  border: 1px solid #fcc;
+  border-radius: 8px;
+  padding: 15px;
+  text-align: center;
+  color: #c33;
+}
+
+.btn-refresh {
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+.btn-refresh:hover {
+  background: #ff5252;
 }
 
 .card {
@@ -136,11 +352,36 @@ export default {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   border: 1px solid #e8ecf0;
+  position: relative;
 }
 
 .card:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Estado de carga */
+.card.loading {
+  opacity: 0.7;
+}
+
+.card.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .card-header {
@@ -199,6 +440,7 @@ export default {
   font-weight: 700;
   color: #2c3e50;
   margin-bottom: 8px;
+  transition: all 0.3s ease;
 }
 
 .card-label {
@@ -229,12 +471,17 @@ export default {
   gap: 6px;
 }
 
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .btn-primary {
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
 }
 
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
@@ -245,13 +492,36 @@ export default {
   border: 1px solid #dee2e6;
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover:not(:disabled) {
   background: #e9ecef;
   color: #495057;
 }
 
 .btn-icon {
   font-size: 12px;
+}
+
+/* Sección de refresh */
+.refresh-section {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.btn-refresh {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-refresh:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 /* Responsive Design */
