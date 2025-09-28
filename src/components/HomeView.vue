@@ -266,18 +266,17 @@ export default {
 
     // Métodos para crear nuevos registros (opcional)
     nuevaUbicacion() {
-      console.log('Creando nueva ubicación...');
-      // Aquí puedes agregar la lógica para crear una nueva ubicación
+      this.$router.push('/ubicacion/nueva');
     },
 
     nuevoResponsable() {
       console.log('Creando nuevo responsable...');
-      // Aquí puedes agregar la lógica para crear un nuevo responsable
+      this.$router.push('/personal/nuevo');
     },
 
     nuevoEquipo() {
       console.log('Creando nuevo equipo médico...');
-      // Aquí puedes agregar la lógica para crear un nuevo equipo
+      this.$router.push('/equipo/nuevo');
     }
   },
 
