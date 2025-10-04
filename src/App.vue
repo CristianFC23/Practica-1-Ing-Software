@@ -111,7 +111,7 @@ export default {
 .header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 12px 20px;
+  padding: 20px 12px 20px 0px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -126,9 +126,12 @@ export default {
 }
 
 .logo {
-  height: 45px;
+  height: 70px;
   width: auto;
   filter: brightness(0) invert(1);
+  margin-top: 10px;  /* lo empuja hacia abajo */
+  margin-bottom: 10px; /* lo empuja hacia arriba */
+  margin-left: 0px;
 }
 
 .company-info {
