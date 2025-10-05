@@ -16,7 +16,7 @@
           <input
             type="text"
             v-model="searchQuery"
-            placeholder="Ingrese código, marca, modelo, ubicación o responsable"
+            placeholder="Ingrese código, nombre, marca, modelo, serial, ubicación o responsable"
             class="search-input"
           />
           <button @click="refrescarLista" class="refresh-btn" :disabled="loading">
@@ -52,10 +52,11 @@
               class="ubicacion-item"
             >
               <div class="ubicacion-info">
-                <p class="ubicacion-nombre">{{ equipo.marca }} {{ equipo.modelo }}</p>
-                <p class="ubicacion-detalle">Código: {{ equipo.codigo }}</p>
-                <p class="ubicacion-detalle">Ubicación: {{ equipo.ubicacion_nombre }}</p>
-                <p class="ubicacion-detalle">Responsable: {{ equipo.responsable_nombre }}</p>
+                <p class="ubicacion-nombre">{{ equipo.nombre }}</p>
+                <p class="ubicacion-detalle"><strong>Marca:</strong> {{ equipo.marca }} | <strong>Modelo:</strong> {{ equipo.modelo }}</p>
+                <p class="ubicacion-detalle"><strong>Código:</strong> {{ equipo.codigo }} | <strong>Serial:</strong> {{ equipo.serial }}</p>
+                <p class="ubicacion-detalle"><strong>Ubicación:</strong> {{ equipo.ubicacion_nombre }}</p>
+                <p class="ubicacion-detalle"><strong>Responsable:</strong> {{ equipo.responsable_nombre }}</p>
               </div>
               <div class="acciones">
                 <button class="edit-btn" @click.stop="abrirModalEditar(equipo)">EDITAR</button>
@@ -71,12 +72,22 @@
     <div v-if="mostrarModal" class="modal-overlay">
       <div class="modal-content">
         <h3>Editar Equipo Médico</h3>
+        
         <label>Código</label>
-        <input v-model="equipoEditando.codigo" />
+        <input v-model="equipoEditando.codigo" placeholder="Ej: EQ-001" />
+        
+        <label>Nombre del Equipo</label>
+        <input v-model="equipoEditando.nombre" placeholder="Ej: Monitor de Signos Vitales" />
+        
         <label>Marca</label>
-        <input v-model="equipoEditando.marca" />
+        <input v-model="equipoEditando.marca" placeholder="Ej: Philips" />
+        
         <label>Modelo</label>
-        <input v-model="equipoEditando.modelo" />
+        <input v-model="equipoEditando.modelo" placeholder="Ej: IntelliVue MX40" />
+        
+        <label>Serial</label>
+        <input v-model="equipoEditando.serial" placeholder="Ej: SN123456789" />
+        
         <label>Ubicación</label>
         <select v-model="equipoEditando.ubicacion" required>
           <option disabled value="">Seleccione una ubicación</option>
@@ -88,6 +99,7 @@
             {{ ubicacion.nombre }}
           </option>
         </select>
+        
         <label>Responsable</label>
         <select v-model="equipoEditando.responsable" required>
           <option disabled value="">Seleccione un responsable</option>
@@ -134,8 +146,10 @@ export default {
       const q = this.searchQuery.toLowerCase()
       return this.equipos.filter(e =>
         e.codigo.toLowerCase().includes(q) ||
+        (e.nombre && e.nombre.toLowerCase().includes(q)) ||
         e.marca.toLowerCase().includes(q) ||
         e.modelo.toLowerCase().includes(q) ||
+        (e.serial && e.serial.toLowerCase().includes(q)) ||
         (e.ubicacion_nombre && e.ubicacion_nombre.toLowerCase().includes(q)) ||
         (e.responsable_nombre && e.responsable_nombre.toLowerCase().includes(q))
       )
@@ -230,8 +244,10 @@ export default {
       
       const datos = {
         codigo: this.equipoEditando.codigo,
+        nombre: this.equipoEditando.nombre,
         marca: this.equipoEditando.marca,
         modelo: this.equipoEditando.modelo,
+        serial: this.equipoEditando.serial,
         ubicacion: this.equipoEditando.ubicacion,
         responsable: this.equipoEditando.responsable
       }
@@ -389,13 +405,16 @@ export default {
 .ubicacion-nombre {
   font-weight: 600;
   color: #2c3e50;
-  margin: 0 0 5px 0;
+  margin: 0 0 8px 0;
   font-size: 16px;
 }
 .ubicacion-detalle {
   font-size: 13px;
   color: #7f8c8d;
   margin: 0 0 5px 0;
+}
+.ubicacion-detalle strong {
+  color: #667eea;
 }
 .acciones {
   display: flex;
@@ -443,18 +462,22 @@ export default {
   background: #fff;
   padding: 20px;
   border-radius: 12px;
-  width: 350px;
+  width: 400px;
   max-width: 90%;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  max-height: 90vh;
+  overflow-y: auto;
 }
 .modal-content h3 {
   margin-top: 0;
+  color: #2c3e50;
 }
 .modal-content label {
   font-size: 13px;
   color: #7f8c8d;
   margin-top: 10px;
   display: block;
+  font-weight: 500;
 }
 .modal-content input,
 .modal-content select {
@@ -463,6 +486,14 @@ export default {
   margin-top: 4px;
   border: 1px solid #dee2e6;
   border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+.modal-content input:focus,
+.modal-content select:focus {
+  border-color: #667eea;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
 }
 .modal-buttons {
   margin-top: 15px;
@@ -474,10 +505,10 @@ export default {
   background: #95a5a6;
   color: white;
   border: none;
-  padding: 6px 12px;
+  padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 13px;
 }
 .cancel-btn:hover {
   background: #7f8c8d;
@@ -486,10 +517,10 @@ export default {
   background: #3498db;
   color: white;
   border: none;
-  padding: 6px 12px;
+  padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 13px;
 }
 .save-btn:hover {
   background: #2980b9;

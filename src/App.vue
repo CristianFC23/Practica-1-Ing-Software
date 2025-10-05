@@ -53,7 +53,7 @@
         <li class="nav-item">
           <a href="equipos" @click="setActiveRoute('equipos')" :class="{ 'active': activeRoute === 'equipos' }"
             class="nav-link">
-            <span class="nav-icon">🔧</span>
+            <span class="nav-icon">🩺</span>
             <span class="nav-text" v-show="sidebarOpen">Equipos</span>
           </a>
         </li>

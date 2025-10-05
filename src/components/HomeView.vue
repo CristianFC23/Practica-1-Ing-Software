@@ -69,7 +69,7 @@
     <div class="card equipos-card" :class="{ 'loading': loading.equipos }">
       <div class="card-header">
         <div class="card-icon equipos-icon">
-          <span>🏥</span>
+          <span>🩺</span>
         </div>
         <div class="card-title">
           <h3>Equipos Médicos</h3>
@@ -95,7 +95,7 @@
     </div>
 
     <!-- Botón para refrescar dashboard -->
-    <div class="refresh-section">
+    <!-- <div class="refresh-section">
       <button 
         @click="refrescarDashboard" 
         class="btn btn-refresh"
@@ -104,7 +104,7 @@
         <span class="btn-icon">🔄</span>
         {{ todosCargando ? 'Actualizando...' : 'Actualizar Dashboard' }}
       </button>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -312,6 +312,7 @@ export default {
 <style scoped>
 /* Dashboard Cards */
 .dashboard-cards {
+  margin: 0 auto; 
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 30px;

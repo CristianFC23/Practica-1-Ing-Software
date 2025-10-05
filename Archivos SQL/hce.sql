@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-10-2025 a las 01:58:16
+-- Tiempo de generación: 05-10-2025 a las 03:43:33
 -- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.0.30
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,6 +30,8 @@ SET time_zone = "+00:00";
 CREATE TABLE `equipos_medicos` (
   `id` int(5) NOT NULL,
   `codigo` varchar(50) NOT NULL,
+  `nombre` varchar(50) NOT NULL,
+  `serial` varchar(20) NOT NULL,
   `marca` varchar(50) NOT NULL,
   `modelo` varchar(50) NOT NULL,
   `ubicacion` int(20) NOT NULL,
@@ -40,62 +42,57 @@ CREATE TABLE `equipos_medicos` (
 -- Volcado de datos para la tabla `equipos_medicos`
 --
 
-INSERT INTO `equipos_medicos` (`id`, `codigo`, `marca`, `modelo`, `ubicacion`, `responsable`) VALUES
-(1, 'EQ-001', 'Philips', 'HeartStart XL', 10, 112),
-(2, 'EQ-002', 'GE', 'B105', 11, 113),
-(3, 'EQ-003', 'Siemens', 'Somatom Go', 9, 115),
-(4, 'EQ-004', 'Mindray', 'BeneVision N22', 5, 150),
-(5, 'EQ-005', 'Medtronic', 'Puritan Bennett 840', 10, 58),
-(13, 'EQ001', 'Siemens', 'MX100', 1, 1),
-(14, 'EQ002', 'Philips', 'PR200', 2, 2),
-(15, 'EQ003', 'GE', 'GE300', 3, 3),
-(16, 'EQ004', 'Mindray', 'MR400', 4, 4),
-(17, 'EQ005', 'Dräger', 'DR500', 5, 5),
-(18, 'EQ006', 'Siemens', 'MX110', 6, 6),
-(19, 'EQ007', 'Philips', 'PR210', 7, 7),
-(20, 'EQ008', 'GE', 'GE310', 8, 8),
-(21, 'EQ009', 'Mindray', 'MR410', 9, 9),
-(22, 'EQ010', 'Dräger', 'DR510', 10, 10),
-(23, 'EQ011', 'Siemens', 'MX120', 1, 11),
-(24, 'EQ012', 'Philips', 'PR220', 2, 12),
-(25, 'EQ013', 'GE', 'GE320', 3, 13),
-(26, 'EQ014', 'Mindray', 'MR420', 4, 14),
-(27, 'EQ015', 'Dräger', 'DR520', 5, 15),
-(28, 'EQ016', 'Siemens', 'MX130', 6, 16),
-(29, 'EQ017', 'Philips', 'PR230', 7, 17),
-(30, 'EQ018', 'GE', 'GE330', 8, 18),
-(31, 'EQ019', 'Mindray', 'MR430', 9, 19),
-(32, 'EQ020', 'Dräger', 'DR530', 10, 20),
-(33, 'EQ021', 'Siemens', 'MX140', 1, 2),
-(34, 'EQ022', 'Philips', 'PR240', 2, 4),
-(35, 'EQ023', 'GE', 'GE340', 3, 6),
-(36, 'EQ024', 'Mindray', 'MR440', 4, 8),
-(37, 'EQ025', 'Dräger', 'DR540', 5, 10),
-(38, 'EQ026', 'Siemens', 'MX150', 6, 12),
-(39, 'EQ027', 'Philips', 'PR250', 7, 14),
-(40, 'EQ028', 'GE', 'GE350', 8, 16),
-(41, 'EQ029', 'Mindray', 'MR450', 9, 18),
-(42, 'EQ030', 'Dräger', 'DR550', 10, 20),
-(43, 'EQ031', 'Siemens', 'MX160', 1, 3),
-(44, 'EQ032', 'Philips', 'PR260', 2, 5),
-(45, 'EQ033', 'GE', 'GE360', 3, 7),
-(46, 'EQ034', 'Mindray', 'MR460', 4, 9),
-(47, 'EQ035', 'Dräger', 'DR560', 5, 11),
-(48, 'EQ036', 'Siemens', 'MX170', 6, 13),
-(49, 'EQ037', 'Philips', 'PR270', 7, 15),
-(50, 'EQ038', 'GE', 'GE370', 8, 17),
-(51, 'EQ039', 'Mindray', 'MR470', 9, 19),
-(52, 'EQ040', 'Dräger', 'DR570', 10, 1),
-(53, 'EQ041', 'Siemens', 'MX180', 1, 20),
-(54, 'EQ042', 'Philips', 'PR280', 2, 18),
-(55, 'EQ043', 'GE', 'GE380', 3, 16),
-(56, 'EQ044', 'Mindray', 'MR480', 4, 14),
-(57, 'EQ045', 'Dräger', 'DR580', 5, 12),
-(58, 'EQ046', 'Siemens', 'MX190', 6, 10),
-(59, 'EQ047', 'Philips', 'PR290', 7, 8),
-(60, 'EQ048', 'GE', 'GE390', 8, 6),
-(61, 'EQ049', 'Mindray', 'MR490', 9, 4),
-(62, 'EQ050', 'Dräger', 'DR590', 10, 2);
+INSERT INTO `equipos_medicos` (`id`, `codigo`, `nombre`, `serial`, `marca`, `modelo`, `ubicacion`, `responsable`) VALUES
+(64, 'EQ-001', 'Monitor de Signos Vitales', 'SN-MV-2023-001', 'Philips', 'IntelliVue MX40', 1, 1),
+(65, 'EQ-002', 'Electrocardiografo', 'SN-ECG-2023-002', 'GE Healthcare', 'MAC 2000', 2, 1),
+(66, 'EQ-003', 'Desfibrilador', 'SN-DEF-2023-003', 'ZOLL', 'R Series', 3, 2),
+(67, 'EQ-004', 'Ventilador Mecánico', 'SN-VM-2023-004', 'Dräger', 'Evita V300', 1, 1),
+(68, 'EQ-005', 'Bomba de Infusión', 'SN-BI-2023-005', 'B.Braun', 'Perfusor Space', 2, 2),
+(69, 'EQ-006', 'Oxímetro de Pulso', 'SN-OXI-2023-006', 'Masimo', 'Radical-7', 1, 1),
+(70, 'EQ-007', 'Cama Hospitalaria Eléctrica', 'SN-CH-2023-007', 'Hill-Rom', 'Advanta 2', 4, 3),
+(71, 'EQ-008', 'Lámpara Quirúrgica', 'SN-LQ-2023-008', 'Trumpf', 'iLED 5', 3, 2),
+(72, 'EQ-009', 'Mesa Quirúrgica', 'SN-MQ-2023-009', 'Steris', 'AMSCO 3085', 3, 2),
+(73, 'EQ-010', 'Ultrasonido Doppler', 'SN-USD-2023-010', 'GE Healthcare', 'Voluson E10', 5, 1),
+(74, 'EQ-011', 'Equipo de Rayos X Portátil', 'SN-RXP-2023-011', 'Siemens', 'Mobilett XP', 2, 1),
+(75, 'EQ-012', 'Incubadora Neonatal', 'SN-INC-2023-012', 'Dräger', 'Isolette C2000', 4, 3),
+(76, 'EQ-013', 'Nebulizador', 'SN-NEB-2023-013', 'Omron', 'NE-C801', 2, 2),
+(77, 'EQ-014', 'Aspirador Quirúrgico', 'SN-ASQ-2023-014', 'Medela', 'Dominant 50', 3, 2),
+(78, 'EQ-015', 'Esterilizador Autoclave', 'SN-EST-2023-015', 'Tuttnauer', '3870ELV', 3, 2),
+(79, 'EQ-016', 'Tensiómetro Digital', 'SN-TEN-2023-016', 'Omron', 'HEM-7120', 1, 1),
+(80, 'EQ-017', 'Glucómetro', 'SN-GLU-2023-017', 'Accu-Chek', 'Guide', 2, 1),
+(81, 'EQ-018', 'Termómetro Infrarrojo', 'SN-TER-2023-018', 'Braun', 'ThermoScan 7', 1, 1),
+(82, 'EQ-019', 'Centrífuga de Laboratorio', 'SN-CEN-2023-019', 'Hettich', 'EBA 200', 5, 1),
+(83, 'EQ-020', 'Microscopio Binocular', 'SN-MIC-2023-020', 'Olympus', 'CX23', 5, 1),
+(84, 'EQ-021', 'Analizador de Química Sanguínea', 'SN-AQS-2023-021', 'Abbott', 'Architect c4000', 18, 1),
+(85, 'EQ-022', 'Baño María', 'SN-BM-2023-022', 'Memmert', 'WNB 7', 5, 1),
+(86, 'EQ-023', 'Refrigerador Médico', 'SN-REF-2023-023', 'Thermo Scientific', 'TSX Series', 5, 3),
+(87, 'EQ-024', 'Lámpara de Fototerapia', 'SN-LFT-2023-024', 'Dräger', 'BiliLux', 4, 3),
+(88, 'EQ-025', 'Monitor Fetal', 'SN-MF-2023-025', 'Philips', 'Avalon FM30', 4, 3),
+(89, 'EQ-026', 'Silla de Ruedas Manual', 'SN-SRM-2023-026', 'Invacare', 'Tracer EX2', 1, 3),
+(90, 'EQ-027', 'Camilla de Transporte', 'SN-CT-2023-027', 'Stryker', 'Big Wheel', 1, 3),
+(91, 'EQ-028', 'Electrocauterio', 'SN-ELC-2023-028', 'Valleylab', 'Force FX', 3, 2),
+(92, 'EQ-029', 'Laringoscopio', 'SN-LAR-2023-029', 'Welch Allyn', 'Green System 69000', 3, 2),
+(93, 'EQ-030', 'Otoscopio', 'SN-OTO-2023-030', 'Riester', 'ri-scope L2', 2, 1),
+(94, 'EQ-031', 'Oftalmoscopio', 'SN-OFT-2023-031', 'Heine', 'BETA 200', 2, 1),
+(95, 'EQ-032', 'Estetoscopio Electrónico', 'SN-EST-2023-032', 'Littmann', '3200', 2, 1),
+(96, 'EQ-033', 'Nebulizador Ultrasónico', 'SN-NEU-2023-033', 'Beurer', 'IH 50', 2, 2),
+(97, 'EQ-034', 'Carro de Paro', 'SN-CP-2023-034', 'Metro', 'Lifeline', 3, 2),
+(98, 'EQ-035', 'Concentrador de Oxígeno', 'SN-CO-2023-035', 'Philips', 'EverFlo', 1, 1),
+(99, 'EQ-036', 'CPAP', 'SN-CPAP-2023-036', 'ResMed', 'AirSense 10', 1, 1),
+(100, 'EQ-037', 'Colchón Antiescaras', 'SN-CAE-2023-037', 'Invacare', 'microAIR MA55', 4, 3),
+(101, 'EQ-038', 'Grúa para Pacientes', 'SN-GP-2023-038', 'Arjo', 'Maxi Sky 2', 4, 3),
+(102, 'EQ-039', 'Balanza Digital', 'SN-BAL-2023-039', 'Seca', '354', 2, 1),
+(103, 'EQ-040', 'Tallímetro', 'SN-TAL-2023-040', 'Seca', '216', 2, 1),
+(104, 'EQ-041', 'Equipo de Óxido Nitroso', 'SN-EON-2023-041', 'Porter', 'Matrix', 3, 2),
+(105, 'EQ-042', 'Monitor Multiparamétrico', 'SN-MMP-2023-042', 'Mindray', 'BeneView T5', 1, 1),
+(106, 'EQ-043', 'Doppler Vascular', 'SN-DV-2023-043', 'Newman Medical', 'ePad', 5, 1),
+(107, 'EQ-044', 'Dermatoscopio', 'SN-DER-2023-044', 'Heine', 'DELTA 20 T', 2, 1),
+(108, 'EQ-045', 'Fonendoscopio Doppler', 'SN-FD-2023-045', 'Sonotrax', 'Basic', 2, 1),
+(109, 'EQ-046', 'Equipo de Diálisis', 'SN-DIA-2023-046', 'Fresenius', '5008S', 1, 1),
+(110, 'EQ-047', 'Holter de Presión', 'SN-HP-2023-047', 'Spacelabs', '90217A', 2, 1),
+(111, 'EQ-048', 'Espirometro', 'SN-ESP-2023-048', 'Vyaire', 'Vyntus SPIRO', 2, 2),
+(112, 'EQ-049', 'Pulsioximetro de Mesa', 'SN-POM-2023-049', 'Nonin', 'Onyx Vantage 9590', 1, 1),
+(113, 'EQ-050', 'Capnógrafo', 'SN-CAP-2023-050', 'Medtronic', 'Microstream', 3, 2);
 
 -- --------------------------------------------------------
 
@@ -236,7 +233,7 @@ ALTER TABLE `ubicaciones`
 -- AUTO_INCREMENT de la tabla `equipos_medicos`
 --
 ALTER TABLE `equipos_medicos`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
 
 --
 -- AUTO_INCREMENT de la tabla `pacientes`

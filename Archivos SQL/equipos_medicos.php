@@ -88,15 +88,17 @@ if (isset($_GET["insertar"])) {
     }
     
     $codigo = mysqli_real_escape_string($conexionBD, $data->codigo);
+    $nombre = mysqli_real_escape_string($conexionBD, $data->nombre);
     $marca = mysqli_real_escape_string($conexionBD, $data->marca);
     $modelo = mysqli_real_escape_string($conexionBD, $data->modelo);
+    $serial = mysqli_real_escape_string($conexionBD, $data->serial);
     $ubicacion = intval($data->ubicacion);      // guardamos id
     $responsable = intval($data->responsable);  // guardamos id
     
-    if($codigo && $marca && $modelo && $ubicacion && $responsable) {
+    if($codigo && $nombre && $marca && $modelo && $serial && $ubicacion && $responsable) {
         $sqlEquipo = mysqli_query($conexionBD,"
-            INSERT INTO equipos_medicos(codigo, marca, modelo, ubicacion, responsable)
-            VALUES('$codigo','$marca','$modelo',$ubicacion,$responsable)
+            INSERT INTO equipos_medicos(codigo, nombre, marca, modelo, serial, ubicacion, responsable)
+            VALUES('$codigo','$nombre','$marca','$modelo','$serial',$ubicacion,$responsable)
         ");
         if ($sqlEquipo) {
             echo json_encode(["success" => 1, "message" => "Equipo médico creado correctamente"]);
@@ -120,16 +122,20 @@ if (isset($_GET["actualizar"])) {
     
     $id = isset($data->id) ? intval($data->id) : intval($_GET["actualizar"]);
     $codigo = mysqli_real_escape_string($conexionBD, $data->codigo);
+    $nombre = mysqli_real_escape_string($conexionBD, $data->nombre);
     $marca = mysqli_real_escape_string($conexionBD, $data->marca);
     $modelo = mysqli_real_escape_string($conexionBD, $data->modelo);
+    $serial = mysqli_real_escape_string($conexionBD, $data->serial);
     $ubicacion = intval($data->ubicacion);
     $responsable = intval($data->responsable);
     
     $sqlEquipo = mysqli_query($conexionBD,"
         UPDATE equipos_medicos
         SET codigo='$codigo',
+            nombre='$nombre',
             marca='$marca',
             modelo='$modelo',
+            serial='$serial',
             ubicacion=$ubicacion,
             responsable=$responsable
         WHERE id=$id
@@ -144,7 +150,7 @@ if (isset($_GET["actualizar"])) {
 
 // LISTAR TODOS LOS EQUIPOS MÉDICOS (Por defecto)
 $sqlEquipos = mysqli_query($conexionBD,"
-    SELECT e.id, e.codigo, e.marca, e.modelo,
+    SELECT e.id, e.codigo, e.nombre, e.marca, e.modelo, e.serial,
            e.ubicacion, u.nombre AS ubicacion_nombre,
            e.responsable, CONCAT(r.nombre,' ',r.apellido) AS responsable_nombre
     FROM equipos_medicos e
